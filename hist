@@ -1,0 +1,92 @@
+#!/usr/bin/env ruby
+
+def help()
+  STDOUT.puts <<-EOF
+USAGE: hist [OPTION]... FILE...
+Computes a histogram from unsorted numbers (one-per-line) from FILES (or standard input)
+and writing to standard out. The min and max are taken from the data.
+
+Input reads the first number per line, and results are printed one bucket per
+line, in the format:
+<count> <bucket lower bound>
+
+OPTIONS:
+  -h, --help         Show Help Message
+  -b, --bucket-size  Bucket Size (default 100)
+
+EXAMPLE:
+  $ echo "1\n100\n110\n200" | hist -b 100
+  1 0
+  2 100
+  1 200
+EOF
+  exit
+end
+
+class Histogram
+  attr_accessor :bucket_size
+
+  def initialize
+    @buckets = {}
+    @bucket_size = 100
+  end
+
+  def bucket(num)
+    num - (num % @bucket_size)
+  end
+
+  def set_min(num)
+    @min = num if @min.nil?
+    @min = num if num < @min
+  end
+
+  def set_max(num)
+    @max = num if @max.nil?
+    @max = num if num > @max
+  end
+
+  def increment_bucket(num)
+    b = bucket(num)
+    @buckets[b] ||= 0
+    @buckets[b] += 1
+  end
+
+  def <<(num)
+    set_min(num)
+    set_max(num)
+    increment_bucket(num)
+  end
+
+  def to_s
+    (bucket(@min)..bucket(@max)).step(@bucket_size).map { |i|
+      [(@buckets[i] || 0), i].join(' ')
+    }.join("\n")
+  end
+end
+
+def parse_options(hist)
+  return unless ARGV.length > 0
+  case ARGV[0]
+  when "--help", "-h"
+    help
+  when "--bucket-size", "-b"
+    ARGV.shift
+    hist.bucket_size = ARGV.shift.to_i
+  end
+end
+
+def parse_line(line)
+  line.strip.split(/[\s,]+/).first.to_i
+end
+
+# Initialization
+@hist = Histogram.new
+parse_options(@hist)
+
+# Read each line and compute
+ARGF.each_line do |line|
+  @hist << parse_line(line)
+end
+
+# Print results
+puts @hist
