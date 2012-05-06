@@ -1,7 +1,7 @@
 # hist
 ### Pipe-able Command-line Histograms
 
-Because sometimes you want to take a bunch of numbers and compute a histogram. Works great with [spark](https://github.com/holman/spark)
+Because sometimes you want to take a bunch of numbers and compute a histogram. Works great with [spark](https://github.com/holman/spark).
 
 ## Install
 
