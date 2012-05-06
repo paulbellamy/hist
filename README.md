@@ -4,7 +4,7 @@ Pipe-able Command-line Histograms
 
 ## Install
 
-hist is a [ruby script][bin], so drop it somewhere in your `$PATH`.
+hist is an executable ruby script, so drop it somewhere in your `$PATH`.
 
 ## Requirements
 
