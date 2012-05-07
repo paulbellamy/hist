@@ -16,7 +16,7 @@ OPTIONS:
   -c, --counts-only  Only print counts (no bucket bounds)
 
 EXAMPLE:
-  $ echo "1\n100\n110\n200" | hist
+  $ echo "1\\n100\\n110\\n200" | hist
   1 0
   2 100
   1 200
