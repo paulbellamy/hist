@@ -13,9 +13,10 @@ line, in the format:
 OPTIONS:
   -h, --help         Show Help Message
   -b, --bucket-size  Bucket Size (default 100)
+  -c, --counts-only  Only print counts (no bucket bounds)
 
 EXAMPLE:
-  $ echo "1\n100\n110\n200" | hist -b 100
+  $ echo "1\n100\n110\n200" | hist
   1 0
   2 100
   1 200
@@ -24,11 +25,12 @@ EOF
 end
 
 class Histogram
-  attr_accessor :bucket_size
+  attr_accessor :bucket_size, :counts_only
 
   def initialize
     @buckets = {}
     @bucket_size = 100
+    @counts_only = false
   end
 
   def bucket(num)
@@ -59,7 +61,11 @@ class Histogram
 
   def to_s
     (bucket(@min)..bucket(@max)).step(@bucket_size).map { |i|
-      [(@buckets[i] || 0), i].join(' ')
+      if @counts_only
+        (@buckets[i] || 0)
+      else
+        [(@buckets[i] || 0), i].join(' ')
+      end
     }.join("\n")
   end
 end
@@ -72,7 +78,11 @@ def parse_options(hist)
   when "--bucket-size", "-b"
     ARGV.shift
     hist.bucket_size = ARGV.shift.to_i
+  when "--counts-only", "-c"
+    ARGV.shift
+    hist.counts_only = true
   end
+  parse_options(hist)
 end
 
 def parse_line(line)

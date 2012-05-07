@@ -26,6 +26,7 @@ line, in the format:
 OPTIONS:
   -h, --help         Show Help Message
   -b, --bucket-size  Bucket Size (default 100)
+  -c, --counts-only  Only print counts (no bucket bounds)
 
 EXAMPLE:
   $ echo "1\n100\n110\n200" | hist -b 100
